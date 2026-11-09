@@ -8,11 +8,14 @@ const int cubeWidth = 40;
 const int width = 180;
 const int height = 44;
 
+const int baseWidth  = 40;
+const int pyramidHeight = 40;
+
 float A = 0;
 float B = 0;
 float C = 0;
 
-int distance = 50;
+int distance = 42;
 float k1 = 10;
 float zBuffer[width*height];
 char Buffer[width*height];
@@ -55,6 +58,30 @@ void calculatePoint(float i, float j, float k, float ascii_cube_code){
     }
 }
 
+void spinCube();
+
+void spinTriangle(){
+
+    for(float i = -baseWidth/2; i < baseWidth /2; i+=0.15){
+        for(float j = -baseWidth/2; j < baseWidth /2; j+=0.15){
+            calculatePoint(i, pyramidHeight/2, j, '#');
+        }
+    }
+
+    for (float t = 0; t <= 1; t += 0.005)
+        for (float s = -1; s <= 1; s += 0.01) {
+            float y = pyramidHeight/2 - t*pyramidHeight;
+            float r = (baseWidth/2) * (1 - t);
+            calculatePoint(s*r, y, -r, '@');
+            calculatePoint(s*r, y, r, '#');
+            calculatePoint(-r, y, s*r, '!');
+            calculatePoint(r, y, s*r, '&');
+  
+        }
+
+}
+
+
 int main(int argc, char **argv){
 
 
@@ -65,14 +92,16 @@ int main(int argc, char **argv){
         memset(zBuffer, 0, height*width*4);
 
         
-        for(float i = -cubeWidth/2; i < cubeWidth /2; i+=0.15){
-            for(float j = -cubeWidth/2; j < cubeWidth /2; j+=0.15){
-                calculatePoint(i, j, -cubeWidth/2, '#');
-                calculatePoint(i, j, cubeWidth/2, '@');
-                calculatePoint(i, cubeWidth/2, j, '!');
-                calculatePoint(i, -cubeWidth/2, j, '&');
-            }
-        }
+        // for(float i = -cubeWidth/2; i < cubeWidth /2; i+=0.15){
+        //     for(float j = -cubeWidth/2; j < cubeWidth /2; j+=0.15){
+        //         calculatePoint(i, j, -cubeWidth/2, '#');
+        //         calculatePoint(i, j, cubeWidth/2, '@');
+        //         calculatePoint(i, cubeWidth/2, j, '!');
+        //         calculatePoint(i, -cubeWidth/2, j, '&');
+        //     }
+        // }
+
+        spinTriangle();
 
         printf("\x1b[H");
 
@@ -84,9 +113,9 @@ int main(int argc, char **argv){
         }
 
         usleep(8000);
-        A+=0.02;
+        //A+=0.02;
         B+=0.02;
-        C+=0.005;
+        //C+=0.005;
 
     }    
     return 0;
