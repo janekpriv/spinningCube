@@ -58,9 +58,20 @@ void calculatePoint(float i, float j, float k, float ascii_cube_code){
     }
 }
 
-void spinCube();
+void spinCube(){
 
-void spinTriangle(){
+    for(float i = -cubeWidth/2; i < cubeWidth /2; i+=0.15){
+        for(float j = -cubeWidth/2; j < cubeWidth /2; j+=0.15){
+            calculatePoint(i, j, -cubeWidth/2, '#');
+            calculatePoint(i, j, cubeWidth/2, '@');
+            calculatePoint(i, cubeWidth/2, j, '!');
+            calculatePoint(i, -cubeWidth/2, j, '&');
+        }
+    }
+
+}
+
+void spinPyramid(){
 
     for(float i = -baseWidth/2; i < baseWidth /2; i+=0.15){
         for(float j = -baseWidth/2; j < baseWidth /2; j+=0.15){
@@ -84,6 +95,19 @@ void spinTriangle(){
 
 int main(int argc, char **argv){
 
+    int shape = 0;   // cube
+
+    int opt;
+    while ((opt = getopt(argc, argv, "cp")) != -1) {
+        switch (opt) {
+            case 'c': shape = 0; break;
+            case 'p': shape = 1; break;
+            default:
+                fprintf(stderr, "Usage: %s [-c | -p]\n", argv[0]);  
+                return 1;
+        }
+    }
+    
 
     printf("\x1b[2J");
 
@@ -91,17 +115,15 @@ int main(int argc, char **argv){
         memset(Buffer, ascii_background_code, height*width);
         memset(zBuffer, 0, height*width*4);
 
-        
-        // for(float i = -cubeWidth/2; i < cubeWidth /2; i+=0.15){
-        //     for(float j = -cubeWidth/2; j < cubeWidth /2; j+=0.15){
-        //         calculatePoint(i, j, -cubeWidth/2, '#');
-        //         calculatePoint(i, j, cubeWidth/2, '@');
-        //         calculatePoint(i, cubeWidth/2, j, '!');
-        //         calculatePoint(i, -cubeWidth/2, j, '&');
-        //     }
-        // }
-
-        spinTriangle();
+        switch (shape)
+        {
+        case 1:
+            spinPyramid();
+            break;
+        default:
+            spinCube();
+            break;
+        }
 
         printf("\x1b[H");
 
